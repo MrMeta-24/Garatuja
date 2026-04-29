@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client</title>
+    <link rel="stylesheet" href="/src-2/client/styles/main.css">
+</head>
+
+
+
+<body>
+    <div>
+        <input name="item">
+        <button id="add">add</button>
+    </div>
+
+    <ul>
+        <!--aqui vão aparecer os usuarios-->
+    </ul>
+    
+    <template>
+        <li>
+            <input></input>
+            <div>
+            <button id="delete">delete</button>
+            </div>
+        </li>
+    </template>
+
+    <script>
+        const  elInput = document.querySelector("[name='item']")
+        const elBtADD = document.querySelector("#add")
+        const elList = document.querySelector("ul")
+        const elTemplateLi = document.querySelector("template")
+
+        elBtADD.addEventListener("click", () => {
+            const elNewItem = elTemplateLi.content.querySelector("li").cloneNode(true);
+            elNewItem.querySelector("input").value = elInput.value;
+            elNewItem.querySelector("#delete").addEventListener("click", () => {
+                elNewItem.remove();
+        });
+            elList.prepend(elNewItem);
+            elInput.value ="";
+        })
+    </script>
+
+</body>
+</html>

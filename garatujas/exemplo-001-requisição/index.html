@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New website</title>
+</head>
+<body>
+    <h1>00:00:00</h1>
+    <button>Update</button>
+    <script>
+
+        const br = document.querySelector("button")
+        const h1 = document.querySelector("h1")
+
+        async function updateTime() {
+            const req = await fetch("/time")
+            const time = await req.text()
+            h1.textContent = time
+        }
+
+        bt.addEventListener("click", async () => {})
+
+    </script>
+</body>
+</html>
