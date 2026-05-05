@@ -1,6 +1,6 @@
 ## api.turma02.ts
 
-```
+```typescript
 import todo from "./core.ts";
 
 const server = Bun.serve({
