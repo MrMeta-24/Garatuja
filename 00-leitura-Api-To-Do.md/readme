@@ -101,15 +101,14 @@ const server = Bun.serve({
 });
 
 console.log(`Server running at http://localhost:${server.port}`);
+```
 
-```
-```
 
 ---
 
 ## CORE.TS
 
-```
+```typescript
 const jsonFilePath = __dirname + '/data.temp.json';
 const list: string[] = await loadFromFile();
 
@@ -166,3 +165,4 @@ async function removeItem(index: number) {
 export default { addItem, getItems, updateItem, removeItem };
 
 ```
+
