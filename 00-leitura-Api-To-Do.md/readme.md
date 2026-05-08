@@ -1,19 +1,17 @@
 ## api.turma02.ts
 ```typescript
-// Importa as funções do arquivo core.ts
-import todo from "./core.ts"; 
+
+import todo from "./core.ts"; // Importa as funções do arquivo core.ts
 
 // Cria o servidor usnado BUN
-const server = Bun.serve({ 
+const server = Bun.serve({  
 
-  // Define a porta do servidor como 3000
-  port: 3000, 
+  port: 3000,   // Define a porta do servidor como 3000
 
   // Define as rotas da api
   routes: { 
 
-    // Rota principal que retorna o html
-    "/": new Response(Bun.file("./public/index.html")), 
+    "/": new Response(Bun.file("./public/index.html")),    // Rota principal que retorna o html
 
     // Rota da lista de tarefas
     "/api/todo": { 
@@ -29,21 +27,17 @@ const server = Bun.serve({
 
         const data = await req.json() as any; 
 
-        // Pega o item enviado
-        const item = data.item || null; 
+        const item = data.item || null;         // Pega o item enviado
 
-        // Verifica se o item foi enviado
-        if (!item) 
+        if (!item) // Verifica se o item foi enviado
           return Response.json(
             'Por favor, forneça um item para adicionar.', 
             { status: 400 }
-          ); 
+          );
 
-        // Add o item na lista
-        await todo.addItem(item); 
+        await todo.addItem(item); // Add o item na lista
 
-        // Retorna os dados recebidos
-        return Response.json(data); 
+        return Response.json(data);         // Retorna os dados recebidos
       }, 
     }, 
 
@@ -55,18 +49,16 @@ const server = Bun.serve({
 
         const index = parseInt(req.params.index); 
 
-        // Observa se o indice é válido
-        if (isNaN(index)) 
+         // Observa se o indice é válido
+        if (isNaN(index))
           return Response.json(
             'Índice inválido. um número inteiro é esperado.', 
             { status: 400 }
           ); 
 
-        // Lê os dados enviados
-        const data = await req.json() as any; 
+        const data = await req.json() as any;         // Lê os dados enviados
 
-        // Pega o novo item
-        const newItem = data.newItem || null; 
+        const newItem = data.newItem || null;         // Pega o novo item
 
         // Observa se o novo item foi informado
         if (!newItem) 
@@ -77,8 +69,7 @@ const server = Bun.serve({
 
         try { 
 
-          // Atualiza o item da lista
-          await todo.updateItem(index, newItem); 
+          await todo.updateItem(index, newItem);           // Atualiza o item da lista
 
           // Mensagem de sucesso
           return Response.json(
@@ -87,8 +78,7 @@ const server = Bun.serve({
 
         } catch (error: any) { 
 
-          // Erro caso o índice seja inválido
-          return Response.json(error.message, { status: 400 }); 
+          return Response.json(error.message, { status: 400 });           // Erro caso o índice seja inválido
         } 
       }, 
 
@@ -103,8 +93,7 @@ const server = Bun.serve({
 
         try { 
 
-          // Remove o item
-          await todo.removeItem(index); 
+          await todo.removeItem(index);           // Remove o item
 
           // Mensagem de sucesso
           return Response.json(
@@ -113,8 +102,7 @@ const server = Bun.serve({
 
         } catch (error: any) { 
 
-          // Mensagem de erro
-          return Response.json(error.message, { status: 400 }); 
+          return Response.json(error.message, { status: 400 });           // Mensagem de erro
         } 
       }, 
     }, 
@@ -133,12 +121,10 @@ const server = Bun.serve({
 
         const data = await req.json() as any; 
 
-        // Adiciona data formatada
-        data.recebidoEm = new Date()
+        data.recebidoEm = new Date()        // Adiciona data formatada
           .toLocaleDateString("pt-BR"); 
 
-        // Retorna os dados atualizados
-        return Response.json(data); 
+        return Response.json(data);         // Retorna os dados atualizados
       }, 
     }, 
 
@@ -148,17 +134,13 @@ const server = Bun.serve({
       // PUT atualiza completamente um recurso
       PUT: async (req, params) => { 
 
-        // Pega o id da URL
-        const { id } = req.params; 
+        const { id } = req.params;         // Pega o id da URL
 
-        // Pega os dados enviados
-        const data = await req.json() as any; 
+        const data = await req.json() as any;         // Pega os dados enviados
 
-        // ADD o id recebido
-        data.id = id; 
+        data.id = id;         // ADD o id recebido
 
-        // ADD data
-        data.recebidoEm = new Date()
+        data.recebidoEm = new Date()         // ADD data
           .toLocaleDateString("pt-BR"); 
 
         return Response.json(data); 
@@ -170,11 +152,9 @@ const server = Bun.serve({
         const { id } = req.params; 
         const data = await req.json() as any; 
 
-        // Lista as chaves alteradas
-        data.chavesAtualizadas = Object.keys(data); 
+        data.chavesAtualizadas = Object.keys(data);         // Lista as chaves alteradas
 
-        // ADD o id
-        data.id = id; 
+        data.id = id;         // ADD o id
 
         // ADD data de atualização
         data.atualizadoEm = new Date()
@@ -204,8 +184,7 @@ const server = Bun.serve({
   }, 
 }); 
 
-// Exibe mensagem no terminal informando a porta do servidor
-console.log(`Server running at http://localhost:${server.port}`);
+console.log(`Server running at http://localhost:${server.port}`);// Exibe mensagem no terminal informando a porta do servidor
 
 
 ````
