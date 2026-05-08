@@ -198,7 +198,7 @@ const server = Bun.serve({
 
   }, 
 
-  // Se nenhuma rota seja encontrada
+  // Caso nenhuma rota seja encontrada,Printa um erro 404
   async fetch(req) { 
     return new Response(`Not Found`, { status: 404 }); 
   }, 
