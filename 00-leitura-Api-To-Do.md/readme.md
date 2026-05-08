@@ -1,0 +1,327 @@
+## api.turma02.ts
+
+// Importa as funções do arquivo core.ts
+import todo from "./core.ts"; 
+
+// Cria o servidor
+const server = Bun.serve({ 
+
+  // Define a porta como 3000
+  port: 3000, 
+
+  // Define as rotas da api
+  routes: { 
+
+    // Rota principal que retorna o html
+    "/": new Response(Bun.file("./public/index.html")), 
+
+    // Rota da lista de tarefas
+    "/api/todo": { 
+
+      // Método GET retorna todos os itens cadastrados
+      GET: async () => { 
+        const items = await todo.getItems() 
+        return Response.json(items) 
+      }, 
+
+      // Método POST add um novo item na lista
+      POST: async (req) => { 
+
+        const data = await req.json() as any; 
+
+        // Pega o item enviado
+        const item = data.item || null; 
+
+        // Verifica se o item foi enviado
+        if (!item) 
+          return Response.json(
+            'Por favor, forneça um item para adicionar.', 
+            { status: 400 }
+          ); 
+
+        // Add o item na lista
+        await todo.addItem(item); 
+
+        // Retorna os dados recebidos
+        return Response.json(data); 
+      }, 
+    }, 
+
+    // Rota com o index
+    "/api/todo/:index": { 
+
+      // Método PUT atualiza um item existente
+      PUT: async (req) => { 
+
+        const index = parseInt(req.params.index); 
+
+        // Observa se o indice é válido
+        if (isNaN(index)) 
+          return Response.json(
+            'Índice inválido. um número inteiro é esperado.', 
+            { status: 400 }
+          ); 
+
+        // Lê os dados enviados
+        const data = await req.json() as any; 
+
+        // Pega o novo item
+        const newItem = data.newItem || null; 
+
+        // Observa se o novo item foi informado
+        if (!newItem) 
+          return Response.json(
+            'Por favor, forneça um novo item para atualizar.', 
+            { status: 400 }
+          ); 
+
+        try { 
+
+          // Atualiza o item da lista
+          await todo.updateItem(index, newItem); 
+
+          // Mensagem de sucesso
+          return Response.json(
+            `Item no índice ${index} atualizado para "${newItem}".`
+          ); 
+
+        } catch (error: any) { 
+
+          // Erro caso o índice seja inválido
+          return Response.json(error.message, { status: 400 }); 
+        } 
+      }, 
+
+      // Método DELETEE remove um item da lista
+      DELETE: async (req) => { 
+
+        const index = parseInt(req.params.index); 
+
+        // Valida o índice
+        if (isNaN(index)) 
+          return Response.json('Índice inválido.', { status: 400 }); 
+
+        try { 
+
+          // Remove o item
+          await todo.removeItem(index); 
+
+          // Mensagem de sucesso
+          return Response.json(
+            `Item no índice ${index} removido com sucesso.`
+          ); 
+
+        } catch (error: any) { 
+
+          // Mensagem de erro
+          return Response.json(error.message, { status: 400 }); 
+        } 
+      }, 
+    }, 
+
+    // EXEMPLO BÁSICO DE ROTAS HTTP
+
+    "/api/exemplo": { 
+
+      // GET basico retorna texto com timestamp atual
+      GET: () => { 
+        return new Response(`Esse é o exemplo: ${Date.now()}`) 
+      }, 
+
+      // POST basico recebe dados e adiciona a data atual
+      POST: async (req) => { 
+
+        const data = await req.json() as any; 
+
+        // Adiciona data formatada
+        data.recebidoEm = new Date()
+          .toLocaleDateString("pt-BR"); 
+
+        // Retorna os dados atualizados
+        return Response.json(data); 
+      }, 
+    }, 
+
+    // Rota com ID
+    "/api/exemplo/:id": { 
+
+      // PUT atualiza completamente um recurso
+      PUT: async (req, params) => { 
+
+        // Pega o id da URL
+        const { id } = req.params; 
+
+        // Pega os dados enviados
+        const data = await req.json() as any; 
+
+        // ADD o id recebido
+        data.id = id; 
+
+        // ADD data
+        data.recebidoEm = new Date()
+          .toLocaleDateString("pt-BR"); 
+
+        return Response.json(data); 
+      }, 
+
+      // PATCH atualiza parcialmente um recurso
+      PATCH: async (req, params) => { 
+
+        const { id } = req.params; 
+        const data = await req.json() as any; 
+
+        // Lista as chaves alteradas
+        data.chavesAtualizadas = Object.keys(data); 
+
+        // ADD o id
+        data.id = id; 
+
+        // ADD data de atualização
+        data.atualizadoEm = new Date()
+          .toLocaleDateString("pt-BR"); 
+
+        return Response.json(data); 
+      }, 
+
+      // DELETE remove o recurso
+      DELETE: (req, params) => { 
+
+        const { id } = req.params; 
+
+        return new Response(
+          `Recurso com id ${id} deletado`, 
+          { status: 200 }
+        ); 
+      );
+
+    // FIM DO EXEMPLO BÁSICO
+
+  }, 
+
+  // Se nenhuma rota seja encontrada
+  async fetch(req) { 
+    return new Response(`Not Found`, { status: 404 }); 
+  }, 
+}); 
+
+// Exibe mensagem no terminal informando a porta do servidor
+console.log(`Server running at http://localhost:${server.port}`);
+
+
+---
+
+##core.ts
+
+// Caminho do arquivo JSON onde os dados serão armazenados
+const jsonFilePath = __dirname + '/data.temp.json'; 
+
+// Carrega os dados para iniciar 
+const list: string[] = await loadFromFile(); 
+
+
+// FUNÇÃO: loadFromFile
+
+// Carrega os dados do arquivo JSON
+async function loadFromFile() { 
+
+  try { 
+
+    // Abre o arquivo
+    const file = Bun.file(jsonFilePath); 
+
+    // Lê o conteúdo do arquivo como texto
+    const content = await file.text(); 
+
+    // Converte o JSON para array de strings
+    return JSON.parse(content) as string[]; 
+
+  } catch (error: any) { 
+
+    // Caso o arquivo não exista
+    if (error.code === 'ENOENT') 
+      return []; 
+
+    // Lança outros erros
+    throw error; 
+  } 
+} 
+
+// Salva a lista atual no arquivo JSON
+async function saveToFile() { 
+
+  try { 
+
+    // Converte a lista para JSON e salva no arquivo
+    await Bun.write(jsonFilePath, JSON.stringify(list)); 
+
+  } catch (error: any) { 
+
+   // Retorna erro se não consiga salvar
+   throw new Error(
+    "Erro ao salvar os dados no arquivo: " + error.message
+   ); 
+  } 
+} 
+
+
+// FUNÇÃO: addItem
+
+// ADD um novo item na lista
+async function addItem(item: string) { 
+
+  // ADD item no array
+  list.push(item); 
+
+  // Salva alterações no arquivo
+  await saveToFile(); 
+} 
+
+
+// FUNÇÃO: getItems
+
+// Retorna todos os itens da lista
+async function getItems() { 
+  return list; 
+} 
+
+
+// FUNÇÃO: updateItem
+
+// Atualiza um item existente
+async function updateItem(index: number, newItem: string) { 
+
+  // Verifica se o índice é válido
+  if (index < 0 || index >= list.length) 
+    throw new Error("Index fora dos limites"); 
+
+  // Atualiza o item
+  list[index] = newItem; 
+
+  // Salva alterações
+  await saveToFile(); 
+} 
+
+// FUNÇÃO: removeItem
+
+// Remove um item da lista
+async function removeItem(index: number) { 
+
+  // Verifica se é válido
+  if (index < 0 || index >= list.length) 
+    throw new Error("Index fora dos limites"); 
+
+  // Remove 1 item da posição indicada
+  list.splice(index, 1); 
+
+  // Salva alterações
+  await saveToFile(); 
+} 
+
+// Exporta todas as funções
+
+export default { 
+  addItem, 
+  getItems, 
+  updateItem, 
+  removeItem 
+};
