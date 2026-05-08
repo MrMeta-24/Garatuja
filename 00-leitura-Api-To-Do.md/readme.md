@@ -1,5 +1,5 @@
 ## api.turma02.ts
-````
+```typescript
 // Importa as funções do arquivo core.ts
 import todo from "./core.ts"; 
 
@@ -212,7 +212,7 @@ console.log(`Server running at http://localhost:${server.port}`);
 ---
 ## core.ts
 
-```
+```typescript
 // Caminho do arquivo JSON onde os dados serão armazenados
 const jsonFilePath = __dirname + '/data.temp.json'; 
 
