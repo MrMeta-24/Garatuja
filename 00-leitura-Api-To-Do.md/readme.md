@@ -209,8 +209,8 @@ console.log(`Server running at http://localhost:${server.port}`);
 
 
 ````
-----
-##core.ts
+---
+## core.ts
 
 ```
 // Caminho do arquivo JSON onde os dados serão armazenados
