@@ -212,16 +212,16 @@ console.log(`Server running at http://localhost:${server.port}`);
 
 ##core.ts
 
-// Define o caminho do arquivo JSON onde os dados serão armazenados
+// Caminho do arquivo JSON onde os dados serão armazenados
 const jsonFilePath = __dirname + '/data.temp.json'; 
 
-// Carrega os dados do arquivo ao iniciar a aplicação
+// Carrega os dados para iniciar 
 const list: string[] = await loadFromFile(); 
 
-// ==================================================
+
 // FUNÇÃO: loadFromFile
-// ==================================================
-// Responsável por carregar os dados do arquivo JSON
+
+// Carrega os dados do arquivo JSON
 async function loadFromFile() { 
 
   try { 
@@ -246,9 +246,6 @@ async function loadFromFile() {
   } 
 } 
 
-// ==================================================
-// FUNÇÃO: saveToFile
-// ==================================================
 // Salva a lista atual no arquivo JSON
 async function saveToFile() { 
 
@@ -259,37 +256,37 @@ async function saveToFile() {
 
   } catch (error: any) { 
 
-   // Retorna erro caso não consiga salvar
+   // Retorna erro se não consiga salvar
    throw new Error(
     "Erro ao salvar os dados no arquivo: " + error.message
    ); 
   } 
 } 
 
-// ==================================================
+
 // FUNÇÃO: addItem
-// ==================================================
-// Adiciona um novo item na lista
+
+// ADD um novo item na lista
 async function addItem(item: string) { 
 
-  // Adiciona item no array
+  // ADD item no array
   list.push(item); 
 
   // Salva alterações no arquivo
   await saveToFile(); 
 } 
 
-// ==================================================
+
 // FUNÇÃO: getItems
-// ==================================================
+
 // Retorna todos os itens da lista
 async function getItems() { 
   return list; 
 } 
 
-// ==================================================
+
 // FUNÇÃO: updateItem
-// ==================================================
+
 // Atualiza um item existente
 async function updateItem(index: number, newItem: string) { 
 
@@ -304,13 +301,12 @@ async function updateItem(index: number, newItem: string) {
   await saveToFile(); 
 } 
 
-// ==================================================
 // FUNÇÃO: removeItem
-// ==================================================
+
 // Remove um item da lista
 async function removeItem(index: number) { 
 
-  // Verifica se o índice é válido
+  // Verifica se é válido
   if (index < 0 || index >= list.length) 
     throw new Error("Index fora dos limites"); 
 
@@ -322,7 +318,7 @@ async function removeItem(index: number) {
 } 
 
 // Exporta todas as funções
-// Permitindo que outros arquivos utilizem o CRUD
+
 export default { 
   addItem, 
   getItems, 
