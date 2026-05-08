@@ -3,10 +3,10 @@
 // Importa as funções do arquivo core.ts
 import todo from "./core.ts"; 
 
-// Cria o servidor
+// Cria o servidor usnado BUN
 const server = Bun.serve({ 
 
-  // Define a porta como 3000
+  // Define a porta do servidor como 3000
   port: 3000, 
 
   // Define as rotas da api
